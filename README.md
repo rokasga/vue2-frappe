@@ -11,7 +11,6 @@
 
 
 [![npm version](https://badge.fury.io/js/vue2-frappe.svg)](https://badge.fury.io/js/vue2-frappe)
-
 ![npm](https://img.shields.io/npm/dw/vue2-frappe)
 
 This is a simple package to get using Frappe Charts within VueJS
