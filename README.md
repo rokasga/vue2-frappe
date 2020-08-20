@@ -76,6 +76,8 @@ Then in our Vue templates:
 </script>
 ```
 
+There are more examples in the `examples` directory
+
 ### Links
 
 [Frappe Charts](https://github.com/frappe/charts)
