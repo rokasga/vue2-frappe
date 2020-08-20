@@ -1,282 +1,280 @@
 <template>
-    <div :id="this.id"></div>
+  <div :id="this.id"></div>
 </template>
 
 <script>
-    import { Chart } from 'frappe-charts/dist/frappe-charts.min.esm'
+import { Chart } from "frappe-charts";
 
-    let updateTimer
-    
-    export default {
-        props: {
-            id: {
-                required: true,
-                type: String,
-                default: null
-            },
+let updateTimer;
 
-            dataSets: {
-                required: false
-            },
+export default {
+  props: {
+    id: {
+      required: true,
+      type: String,
+      default: null,
+    },
 
-            labels: {
-                required: false,
-                type: Array,
-                default: () => []
-            },
+    dataSets: {
+      required: false,
+    },
 
-            startDate: {
-                required: false,
-                type: Date,
-                default: null
-            },
+    labels: {
+      required: false,
+      type: Array,
+      default: () => [],
+    },
 
-            endDate: {
-                required: false,
-                type: Date,
-                default: null
-            },
+    startDate: {
+      required: false,
+      type: Date,
+      default: null,
+    },
 
-            dataPoints: {
-                required: false,
-                type: Object,
-                default: () => {}
-            },
+    endDate: {
+      required: false,
+      type: Date,
+      default: null,
+    },
 
-            countLabel: {
-                required: false,
-                type: String,
-                default: 'Count'
-            },
+    dataPoints: {
+      required: false,
+      type: Object,
+      default: () => {},
+    },
 
-            title: {
-                required: false,
-                type: String
-            },
+    countLabel: {
+      required: false,
+      type: String,
+      default: "Count",
+    },
 
-            height: {
-                required: false,
-                type: Number,
-                default: 300
-            },
+    title: {
+      required: false,
+      type: String,
+    },
 
-            type: {
-                required: false,
-                type: String,
-                default: 'bar'
-            },
+    height: {
+      required: false,
+      type: Number,
+      default: 300,
+    },
 
-            yMarkers: {
-                required: false,
-                type: Array,
-                default: () => null
-            },
+    type: {
+      required: false,
+      type: String,
+      default: "bar",
+    },
 
-            yRegions: {
-                required: false,
-                type: Array,
-                default: () => null
-            },
+    yMarkers: {
+      required: false,
+      type: Array,
+      default: () => null,
+    },
 
-            colors: {
-                required: false,
-                type: Array,
-                default: () => [
-                    'purple', '#ffa3ef', 'light-blue'
-                ]
-            },
+    yRegions: {
+      required: false,
+      type: Array,
+      default: () => null,
+    },
 
-            isNavigable: {
-                required: false,
-                type: Boolean,
-                default: false
-            },
+    colors: {
+      required: false,
+      type: Array,
+      default: () => ["purple", "#ffa3ef", "light-blue"],
+    },
 
-            valuesOverPoints: {
-                required: false,
-                type: Boolean,
-                default: false
-            },
+    isNavigable: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
 
-            lineOptions: {
-                required: false,
-                type: Object,
-                default: () => {
-                    return {
-                        dotSize: 4,
-                        hideLine: 0,
-                        hideDots: 0,
-                        heatline: 0,
-                        regionFill: 0,
-                        areaFill: 0
-                    }
-                }
-            },
+    valuesOverPoints: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
 
-            axisOptions: {
-                required: false,
-                type: Object,
-                default: () => {
-                    return {
-                        yAxisMode: '',
-                        xAxisMode: '',
-                        xIsSeries: 0
-                    }
-                }
-            },
+    lineOptions: {
+      required: false,
+      type: Object,
+      default: () => {
+        return {
+          dotSize: 4,
+          hideLine: 0,
+          hideDots: 0,
+          heatline: 0,
+          regionFill: 0,
+          areaFill: 0,
+        };
+      },
+    },
 
-            maxLegendPoints: {
-                required: false,
-                type: Number,
-                default: 20
-            },
+    axisOptions: {
+      required: false,
+      type: Object,
+      default: () => {
+        return {
+          yAxisMode: "",
+          xAxisMode: "",
+          xIsSeries: 0,
+        };
+      },
+    },
 
-            maxSlices: {
-                required: false,
-                type: Number,
-                default: 20
-            },
+    maxLegendPoints: {
+      required: false,
+      type: Number,
+      default: 20,
+    },
 
-            barOptions: {
-                required: false,
-                type: Object,
-                default: () => {
-                    return {
-                        height: 20,
-                        depth: 2,
-                        spaceRatio: 0.5,
-                        stacked: 0
-                    }
-                }
-            },
+    maxSlices: {
+      required: false,
+      type: Number,
+      default: 20,
+    },
 
-            discreteDomains: {
-                required: false,
-                type: Boolean,
-                default: true
-            },
+    barOptions: {
+      required: false,
+      type: Object,
+      default: () => {
+        return {
+          height: 20,
+          depth: 2,
+          spaceRatio: 0.5,
+          stacked: 0,
+        };
+      },
+    },
 
-            tooltipOptions: {
-                required: false,
-                type: Object,
-                default: () => {
-                    return {
-                        formatTooltipX: d => (d + '').toUpperCase(),
-                        formatTooltipY: d => d + ' pts'
-                    }
-                }
-            }
-        },
+    discreteDomains: {
+      required: false,
+      type: Boolean,
+      default: true,
+    },
 
-        data () {
-            return {
-                chart: null,
-                data: {
-                    labels: this.labels,
-                    datasets: this.dataSets,
-                    yMarkers: this.yMarkers,
-                    yRegions: this.yRegions
-                },
-                heatmapData: {
-                    dataPoints: this.dataPoints,
-                    start: this.startDate,
-                    end: this.endDate,
-                    countLabel: this.countLabel
-                }
-            }
-        },
+    tooltipOptions: {
+      required: false,
+      type: Object,
+      default: () => {
+        return {
+          formatTooltipX: (d) => (d + "").toUpperCase(),
+          formatTooltipY: (d) => d + " pts",
+        };
+      },
+    },
+  },
 
-        watch: {
-            labels() {
-                this.updateDebounced()
-            },
-            dataSets() {
-                this.updateDebounced()
-            },
-            yMarkers() {
-                this.updateDebounced()
-            },
-            yRegions() {
-                this.updateDebounced()
-            }
-        },
+  data() {
+    return {
+      chart: null,
+      data: {
+        labels: this.labels,
+        datasets: this.dataSets,
+        yMarkers: this.yMarkers,
+        yRegions: this.yRegions,
+      },
+      heatmapData: {
+        dataPoints: this.dataPoints,
+        start: this.startDate,
+        end: this.endDate,
+        countLabel: this.countLabel,
+      },
+    };
+  },
 
-        mounted () {
-            this.startChart()
-        },
+  watch: {
+    labels() {
+      this.updateDebounced();
+    },
+    dataSets() {
+      this.updateDebounced();
+    },
+    yMarkers() {
+      this.updateDebounced();
+    },
+    yRegions() {
+      this.updateDebounced();
+    },
+  },
 
-        methods: {
-            startChart () {
-                const baseOptions = {
-                    type: this.type,
-                    discreteDomains: this.discreteDomains,
-                    colors: this.colors,
-                    height: this.height,
-                    title: this.title,
-                    isNavigable: this.isNavigable
-                }
+  mounted() {
+    this.startChart();
+  },
 
-                const heatMapOptions = {
-                    data: this.heatmapData
-                }
+  methods: {
+    startChart() {
+      const baseOptions = {
+        type: this.type,
+        discreteDomains: this.discreteDomains,
+        colors: this.colors,
+        height: this.height,
+        title: this.title,
+        isNavigable: this.isNavigable,
+      };
 
-                const chartOptions = {
-                    data: this.data,
-                    tooltipOptions: this.tooltipOptions,
-                    valuesOverPoints: this.valuesOverPoints,
-                    barOptions: this.barOptions,
-                    lineOptions: this.lineOptions,
-                    axisOptions: this.axisOptions,
-                    maxLegendPoints: this.maxLegendPoints,
-                    maxSlices: this.maxSlices,
-                }
+      const heatMapOptions = {
+        data: this.heatmapData,
+      };
 
-                const options = Object.assign(
-                    baseOptions,
-                    (this.type === 'heatmap') ? heatMapOptions : chartOptions
-                )
+      const chartOptions = {
+        data: this.data,
+        tooltipOptions: this.tooltipOptions,
+        valuesOverPoints: this.valuesOverPoints,
+        barOptions: this.barOptions,
+        lineOptions: this.lineOptions,
+        axisOptions: this.axisOptions,
+        maxLegendPoints: this.maxLegendPoints,
+        maxSlices: this.maxSlices,
+      };
 
-                this.chart = new Chart(`#${this.id}`, options)
-            },
+      const options = Object.assign(
+        baseOptions,
+        this.type === "heatmap" ? heatMapOptions : chartOptions
+      );
 
-            export () {
-                this.chart.export()
-            },
+      this.chart = new Chart(`#${this.id}`, options);
+    },
 
-            addDataPoint (label, valueFromEachDataset, index) {
-                this.chart.addDataPoint(label, valueFromEachDataset, index)
-            },
+    export() {
+      this.chart.export();
+    },
 
-            removeDataPoint (index) {
-                this.chart.removeDataPoint(index)
-            },
+    addDataPoint(label, valueFromEachDataset, index) {
+      this.chart.addDataPoint(label, valueFromEachDataset, index);
+    },
 
-            updateDataset (datasetValues, index) {
-                this.chart.updateDataset(datasetValues, index)
-            },
+    removeDataPoint(index) {
+      this.chart.removeDataPoint(index);
+    },
 
-            updateDebounced () {
-                if(updateTimer) {
-                    window.clearTimeout(updateTimer)
-                    updateTimer = null
-                }
-                updateTimer = window.setTimeout(() => {
-                    this.update()
-                }, 1)
-            },
-            update () {
-                const data = {
-                    labels: this.labels,
-                    datasets: this.dataSets,
-                    yMarkers: this.yMarkers,
-                    yRegions: this.yRegions
-                }
-                this.chart.update(data)
-            },
+    updateDataset(datasetValues, index) {
+      this.chart.updateDataset(datasetValues, index);
+    },
 
-            unbindWindowEvents () {
-                this.chart.unbindWindowEvents()
-            }
-        }
-    }
+    updateDebounced() {
+      if (updateTimer) {
+        window.clearTimeout(updateTimer);
+        updateTimer = null;
+      }
+      updateTimer = window.setTimeout(() => {
+        this.update();
+      }, 1);
+    },
+    update() {
+      const data = {
+        labels: this.labels,
+        datasets: this.dataSets,
+        yMarkers: this.yMarkers,
+        yRegions: this.yRegions,
+      };
+      this.chart.update(data);
+    },
+
+    unbindWindowEvents() {
+      this.chart.unbindWindowEvents();
+    },
+  },
+};
 </script>
