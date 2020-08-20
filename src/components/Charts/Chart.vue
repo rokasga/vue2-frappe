@@ -38,9 +38,7 @@ export default {
     },
 
     dataPoints: {
-      required: false,
-      type: Object,
-      default: () => {},
+      required: false
     },
 
     countLabel: {
