@@ -8,6 +8,6 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "frappe-charts": "^1.5.2"
+    "frappe-charts": "^1.6.3"
   }
 }
